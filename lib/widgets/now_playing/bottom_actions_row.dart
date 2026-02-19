@@ -292,99 +292,121 @@ Future<void> _toggleOffline(
   }
 }
 
-void _showQueue(BuildContext context, List<dynamic> mappedQueue) {
-  final colorScheme = Theme.of(context).colorScheme;
-  final currentIndex = audioHandler.currentQueueIndex;
-
+void _showQueue(BuildContext context, List<dynamic> _) {
   showCustomBottomSheet(
     context,
-    Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        // Header
-        Padding(
-          padding: const EdgeInsets.only(left: 10, right: 8, bottom: 12),
-          child: Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: colorScheme.primaryContainer,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(
-                  FluentIcons.apps_list_24_filled,
-                  color: colorScheme.onPrimaryContainer,
-                  size: 20,
-                ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      context.l10n!.queue,
-                      style: TextStyle(
-                        color: colorScheme.onSurface,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Text(
-                      '${mappedQueue.length} ${context.l10n!.songs}',
-                      style: TextStyle(
-                        color: colorScheme.onSurfaceVariant,
-                        fontSize: 13,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              FilledButton.tonalIcon(
-                onPressed: () {
-                  audioHandler.clearQueue();
-                  Navigator.pop(context);
-                },
-                icon: const Icon(FluentIcons.dismiss_24_regular, size: 18),
-                label: Text(context.l10n!.clear),
-                style: FilledButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
-                  visualDensity: VisualDensity.compact,
-                ),
-              ),
-            ],
-          ),
-        ),
-        // Queue list
-        ListView.builder(
-          shrinkWrap: true,
-          physics: const BouncingScrollPhysics(),
-          padding: commonListViewBottomPadding,
-          itemCount: mappedQueue.length,
-          itemBuilder: (BuildContext context, int index) {
-            final isCurrentSong = index == currentIndex;
-            final borderRadius = getItemBorderRadius(index, mappedQueue.length);
+    StreamBuilder<List<MediaItem>>(
+      stream: audioHandler.queue,
+      builder: (context, snapshot) {
+        final queue = snapshot.data ?? [];
+        final mappedQueue = queue.isNotEmpty
+            ? queue.map(mediaItemToMap).toList()
+            : [];
+        final colorScheme = Theme.of(context).colorScheme;
+        final currentIndex = audioHandler.currentQueueIndex;
 
-            return SongBar(
-              mappedQueue[index],
-              false,
-              onPlay: () {
-                audioHandler.skipToSong(index);
-                Navigator.pop(context);
+        if (mappedQueue.isEmpty) {
+          return Padding(
+            padding: const EdgeInsets.all(32),
+            child: Center(
+              child: Text(
+                context.l10n!.noSongsInQueue,
+                style: TextStyle(color: colorScheme.onSurfaceVariant),
+              ),
+            ),
+          );
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Header
+            Padding(
+              padding: const EdgeInsets.only(left: 10, right: 8, bottom: 12),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: colorScheme.primaryContainer,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(
+                      FluentIcons.apps_list_24_filled,
+                      color: colorScheme.onPrimaryContainer,
+                      size: 20,
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          context.l10n!.queue,
+                          style: TextStyle(
+                            color: colorScheme.onSurface,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          '${mappedQueue.length} ${context.l10n!.songs}',
+                          style: TextStyle(
+                            color: colorScheme.onSurfaceVariant,
+                            fontSize: 13,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FilledButton.tonalIcon(
+                    onPressed: () {
+                      audioHandler.clearQueue();
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(FluentIcons.dismiss_24_regular, size: 18),
+                    label: Text(context.l10n!.clear),
+                    style: FilledButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 8,
+                      ),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            // Queue list
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const BouncingScrollPhysics(),
+              padding: commonListViewBottomPadding,
+              itemCount: mappedQueue.length,
+              itemBuilder: (BuildContext context, int index) {
+                final isCurrentSong = index == currentIndex;
+                final borderRadius =
+                    getItemBorderRadius(index, mappedQueue.length);
+
+                return SongBar(
+                  mappedQueue[index],
+                  false,
+                  onPlay: () {
+                    audioHandler.skipToSong(index);
+                    Navigator.pop(context);
+                  },
+                  backgroundColor: isCurrentSong
+                      ? colorScheme.primaryContainer.withValues(alpha: 0.3)
+                      : colorScheme.surfaceContainerHigh,
+                  borderRadius: borderRadius,
+                  queueIndex: index,
+                );
               },
-              backgroundColor: isCurrentSong
-                  ? colorScheme.primaryContainer.withValues(alpha: 0.3)
-                  : colorScheme.surfaceContainerHigh,
-              borderRadius: borderRadius,
-              queueIndex: index,
-            );
-          },
-        ),
-      ],
+            ),
+          ],
+        );
+      },
     ),
   );
 }
