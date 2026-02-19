@@ -47,6 +47,7 @@ class SongBar extends StatefulWidget {
     this.isFromLikedSongs = false,
     this.playlistId,
     this.onRenamed,
+    this.queueIndex,
     super.key,
   });
 
@@ -62,6 +63,7 @@ class SongBar extends StatefulWidget {
   final bool isFromLikedSongs;
   final String? playlistId;
   final VoidCallback? onRenamed;
+  final int? queueIndex;
 
   @override
   State<SongBar> createState() => _SongBarState();
@@ -265,6 +267,16 @@ class _SongBarState extends State<SongBar> {
         break;
       case 'offline':
         _handleOfflineToggle(context);
+        break;
+      case 'remove_from_queue':
+        if (widget.queueIndex != null) {
+          audioHandler.removeFromQueue(widget.queueIndex!);
+          showToast(
+            context,
+            context.l10n!.songRemoved,
+            duration: const Duration(seconds: 1),
+          );
+        }
         break;
     }
   }
@@ -500,6 +512,20 @@ class _SongBarState extends State<SongBar> {
           },
         ),
       ),
+      if (widget.queueIndex != null)
+        PopupMenuItem<String>(
+          value: 'remove_from_queue',
+          child: Row(
+            children: [
+              Icon(FluentIcons.subtract_circle_24_regular, color: colorScheme.primary),
+              const SizedBox(width: 8),
+              Text(
+                l10n.removeFromPlaylist,
+                style: TextStyle(color: colorScheme.error),
+              ),
+            ],
+          ),
+        ),
     ];
   }
 }
@@ -629,12 +655,8 @@ class _OnlineArtwork extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Image(
-                    color: shouldOverlayBeShown
-                        ? colorScheme.primaryContainer
-                        : null,
-                    colorBlendMode: shouldOverlayBeShown
-                        ? BlendMode.multiply
-                        : null,
+                    color: null,
+                    colorBlendMode: null,
                     opacity: null,
                     image: imageProvider,
                     fit: isImageSmall ? BoxFit.fill : BoxFit.cover,

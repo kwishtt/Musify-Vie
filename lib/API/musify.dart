@@ -196,14 +196,47 @@ Future<List> getRecommendedSongs() async {
 }
 
 Future<List> _getRecommendationsFromRecentlyPlayed() async {
-  // Take 5 random songs from history (increased from 3 to diversify suggestions)
-  final recent = (List.from(userRecentlyPlayed)..shuffle()).take(5).toList();
+  // Build seed songs: prioritize most-played songs (they represent user taste best)
+  final sortedRecent = List.from(userRecentlyPlayed);
+  
+  // Sort by listening count (most played first) for better taste matching
+  sortedRecent.sort((a, b) {
+    final countA = (a['listeningCount'] is int)
+        ? a['listeningCount'] as int
+        : int.tryParse(a['listeningCount']?.toString() ?? '') ?? 0;
+    final countB = (b['listeningCount'] is int)
+        ? b['listeningCount'] as int
+        : int.tryParse(b['listeningCount']?.toString() ?? '') ?? 0;
+    return countB.compareTo(countA);
+  });
 
-  final futures = recent.map((songData) async {
+  // Take top 3 most-played + 2 random for balance between taste and discovery
+  final topPlayed = sortedRecent.take(3).toList();
+  final remaining = sortedRecent.skip(3).toList()..shuffle();
+  final seeds = [...topPlayed, ...remaining.take(2)];
+
+  // Collect IDs of recently played to avoid suggesting them
+  final recentIds = userRecentlyPlayed
+      .map((s) => s['ytid']?.toString())
+      .where((id) => id != null)
+      .toSet();
+
+  final futures = seeds.map((songData) async {
     try {
       final song = await _yt.videos.get(songData['ytid']);
       final relatedSongs = await _yt.videos.getRelatedVideos(song) ?? [];
-      return relatedSongs.take(3).map((s) => returnSongLayout(0, s)).toList();
+
+      // Filter: skip non-music content (too long > 10min or too short < 30s)
+      // and skip songs already in recently played
+      final filtered = relatedSongs.where((s) {
+        final duration = s.duration;
+        if (duration != null) {
+          if (duration.inSeconds < 30 || duration.inMinutes > 10) return false;
+        }
+        return !recentIds.contains(s.id.toString());
+      }).toList();
+
+      return filtered.take(3).map((s) => returnSongLayout(0, s)).toList();
     } catch (e, stackTrace) {
       logger.log(
         'Error getting related videos for ${songData['ytid']}',
@@ -215,10 +248,20 @@ Future<List> _getRecommendationsFromRecentlyPlayed() async {
   }).toList();
 
   final results = await Future.wait(futures);
-  // Limit to 15 items max for performance
-  final playlistSongs = results.expand((list) => list).take(15).toList()
-    ..shuffle();
-  return playlistSongs;
+  final playlistSongs = results.expand((list) => list).toList();
+
+  // Mix in a few liked songs for extra personalization
+  if (userLikedSongsList.isNotEmpty) {
+    final likedCopy = List.from(userLikedSongsList)..shuffle();
+    final likedToAdd = likedCopy
+        .where((s) => !recentIds.contains(s['ytid']?.toString()))
+        .take(3)
+        .toList();
+    playlistSongs.addAll(likedToAdd.cast<Map>());
+  }
+
+  // Deduplicate and shuffle
+  return _deduplicateAndShuffle(playlistSongs);
 }
 
 Future<List> _getRecommendationsFromMixedSources() async {
@@ -963,6 +1006,35 @@ Future<void> _setFallbackRecommendation() async {
     }
   } catch (e) {
     logger.log('Critical: Failed to set fallback recommendation', e, null);
+  }
+}
+
+/// Fetch related songs for a given YouTube video ID.
+/// Returns up to [limit] songs as Map objects, excluding songs whose ytid
+/// is in [excludeIds].
+Future<List<Map>> getRelatedSongs(
+  String ytid, {
+  int limit = 30,
+  Set<String> excludeIds = const {},
+}) async {
+  try {
+    final video = await _yt.videos.get(ytid);
+    final relatedVideos = await _yt.videos.getRelatedVideos(video) ?? [];
+
+    if (relatedVideos.isEmpty) return [];
+
+    final results = <Map>[];
+    for (final related in relatedVideos) {
+      if (results.length >= limit) break;
+      final relatedId = related.id.toString();
+      if (!excludeIds.contains(relatedId)) {
+        results.add(returnSongLayout(0, related));
+      }
+    }
+    return results;
+  } catch (e, stackTrace) {
+    logger.log('Error fetching related songs', e, stackTrace);
+    return [];
   }
 }
 

@@ -42,34 +42,47 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  Key _refreshKey = UniqueKey();
+
+  Future<void> _handleRefresh() async {
+    setState(() {
+      _refreshKey = UniqueKey();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final playlistHeight = MediaQuery.sizeOf(context).height * 0.25 / 1.1;
     return Scaffold(
       appBar: AppBar(title: const Text('Musify.')),
-      body: SingleChildScrollView(
-        padding: commonSingleChildScrollViewPadding,
-        child: Column(
-          children: [
-            ValueListenableBuilder<String?>(
-              valueListenable: announcementURL,
-              builder: (_, _url, __) {
-                if (_url == null) return const SizedBox.shrink();
+      body: RefreshIndicator(
+        onRefresh: _handleRefresh,
+        child: SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: commonSingleChildScrollViewPadding,
+          child: Column(
+            key: _refreshKey,
+            children: [
+              ValueListenableBuilder<String?>(
+                valueListenable: announcementURL,
+                builder: (_, _url, __) {
+                  if (_url == null) return const SizedBox.shrink();
 
-                return AnnouncementBox(
-                  message: context.l10n!.newAnnouncement,
-                  url: _url,
-                  onDismiss: () async {
-                    announcementURL.value = null;
-                  },
-                );
-              },
-            ),
-            _buildSuggestedPlaylists(playlistHeight),
-            _buildSuggestedPlaylists(playlistHeight, showOnlyLiked: true),
-            _buildMostPlayedSection(),
-            _buildRecommendedSongsSection(),
-          ],
+                  return AnnouncementBox(
+                    message: context.l10n!.newAnnouncement,
+                    url: _url,
+                    onDismiss: () async {
+                      announcementURL.value = null;
+                    },
+                  );
+                },
+              ),
+              _buildSuggestedPlaylists(playlistHeight),
+              _buildSuggestedPlaylists(playlistHeight, showOnlyLiked: true),
+              _buildMostPlayedSection(),
+              _buildRecommendedSongsSection(),
+            ],
+          ),
         ),
       ),
     );

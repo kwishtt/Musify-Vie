@@ -558,14 +558,9 @@ class MusifyAudioHandler extends BaseAudioHandler {
   }
 
   Future<void> _playNextRecommendedSong() async {
-    if (_currentLoadingIndex >= 0) {
-      logger.log(
-        'Already loading next song (index: $_currentLoadingIndex), skipping',
-        null,
-        null,
-      );
-      return;
-    }
+    // Force reset _currentLoadingIndex to prevent stale values from blocking
+    // This is safe because we are explicitly requesting a new recommendation
+    _currentLoadingIndex = -1;
 
     try {
       final baseSong = _getCurrentSongForRecommendations();
@@ -574,9 +569,9 @@ class MusifyAudioHandler extends BaseAudioHandler {
         return;
       }
 
-      if (nextRecommendedSong == null) {
-        await _fetchRecommendedSong(baseSong);
-      }
+      // Always fetch a fresh recommendation
+      nextRecommendedSong = null;
+      await _fetchRecommendedSong(baseSong);
 
       if (nextRecommendedSong != null) {
         await _playRecommendation();
@@ -774,8 +769,63 @@ class MusifyAudioHandler extends BaseAudioHandler {
       } else if (replace && _queueList.isNotEmpty) {
         await _playFromQueue(0);
       }
+
+      // Auto-queue related songs when playing a single song
+      // (not from a playlist with multiple songs)
+      if (replace && songs.length == 1) {
+        final songToQueue = songs.first;
+        await _autoQueueRelatedSongs(songToQueue);
+      }
     } catch (e, stackTrace) {
       logger.log('Error adding playlist to queue', e, stackTrace);
+    }
+  }
+
+  /// Fetch related songs in background and append them to the queue.
+  /// Called automatically when playing a single song to build an instant mix.
+  DateTime? _lastAutoQueueTime;
+
+  Future<void> _autoQueueRelatedSongs(Map song) async {
+    try {
+      // Cooldown: minimum 30 seconds between auto-queue requests to avoid rate limiting
+      final now = DateTime.now();
+      if (_lastAutoQueueTime != null &&
+          now.difference(_lastAutoQueueTime!) < const Duration(seconds: 30)) {
+        logger.log('Auto-queue cooldown active, skipping', null, null);
+        return;
+      }
+      _lastAutoQueueTime = now;
+
+      final ytid = song['ytid']?.toString();
+      if (ytid == null || ytid.isEmpty) return;
+
+      // Collect existing queue IDs to avoid duplicates
+      final queueIds = _queueList
+          .map((s) => s['ytid']?.toString())
+          .where((id) => id != null)
+          .cast<String>()
+          .toSet();
+
+      final relatedSongs = await getRelatedSongs(
+        ytid,
+        limit: 30,
+        excludeIds: queueIds,
+      );
+
+      if (relatedSongs.isEmpty) return;
+
+      for (final s in relatedSongs) {
+        _queueList.add(s);
+      }
+      _updateQueueMediaItems();
+
+      logger.log(
+        'Auto-queued ${relatedSongs.length} related songs for "${song['title']}"',
+        null,
+        null,
+      );
+    } catch (e, stackTrace) {
+      logger.log('Error auto-queuing related songs', e, stackTrace);
     }
   }
 

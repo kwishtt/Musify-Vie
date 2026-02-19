@@ -380,6 +380,7 @@ void _showQueue(BuildContext context, List<dynamic> mappedQueue) {
                   ? colorScheme.primaryContainer.withValues(alpha: 0.3)
                   : colorScheme.surfaceContainerHigh,
               borderRadius: borderRadius,
+              queueIndex: index,
             );
           },
         ),

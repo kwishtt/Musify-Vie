@@ -191,6 +191,7 @@ class QueueListView extends StatelessWidget {
               ? colorScheme.primaryContainer.withValues(alpha: 0.5)
               : colorScheme.surfaceContainerHigh,
           borderRadius: borderRadius,
+          queueIndex: index,
         );
       },
     );
