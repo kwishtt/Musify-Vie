@@ -1,125 +1,83 @@
 <div align="center">
-<img src="https://github.com/gokadzev/Musify/raw/master/repository_files/Musify-banner.png" width="100%">
+<img src="assets/images/banner.png" width="100%">
 
-# Musify
+# Musify-Vie
 
-Unlock the full potential of music: Stream effortlessly with one app!
+**A Refined Music Streaming Experience**
+*(Optimized for Vietnamese Localization and Performance)*
 
-[![Stars](https://img.shields.io/github/stars/gokadzev/Musify?style=flat-square&color=D3BEAB)](https://github.com/gokadzev/Musify/stargazers)
-[![Forks](https://img.shields.io/github/forks/gokadzev/Musify?style=flat-square&color=D3BEAB)](https://github.com/gokadzev/Musify/fork)
-[![Downloads](https://img.shields.io/github/downloads/gokadzev/Musify/total?style=flat-square&color=D3BEAB)](https://github.com/gokadzev/Musify/releases)
-[![GitHub release](https://img.shields.io/github/v/release/gokadzev/Musify?color=D3BEAB)](https://github.com/gokadzev/Musify/releases)
-[![License](https://img.shields.io/github/license/gokadzev/Musify?color=D3BEAB)](LICENSE)
-
----
-
-<a href="https://ko-fi.com/gokadzev" target="_blank" title="ko-fi">
-  <img src="https://github.com/user-attachments/assets/1c204507-d124-4b34-878b-96c39c9bb3f8"  alt="ko-fi badge" style="width: 150px;">
-</a>
-
-
+[![Stars](https://img.shields.io/github/stars/kwishtt/Musify-Vie?style=flat-square&color=D3BEAB)](https://github.com/kwishtt/Musify-Vie/stargazers)
+[![Downloads](https://img.shields.io/github/downloads/kwishtt/Musify-Vie/total?style=flat-square&color=D3BEAB)](https://github.com/kwishtt/Musify-Vie/releases)
+[![License](https://img.shields.io/github/license/kwishtt/Musify-Vie?color=D3BEAB)](LICENSE)
 
 ---
 
-## Features
+<details>
+<summary><strong>Dành cho người dùng Việt Nam (Vietnamese Context)</strong></summary>
 
-<center>
+### Tổng quan
+**Musify-Vie** là phiên bản sửa đổi (fork) từ dự án mã nguồn mở [Musify](https://github.com/gokadzev/Musify), tập trung vào việc cải thiện trải nghiệm người dùng tại Việt Nam thông qua việc bản địa hóa toàn diện và tinh chỉnh các thuật toán cốt lõi.
 
-Online song search with suggestions <br/>
-Offline listening support <br/>
-Import & export your data and never lose it <br/>
-Add custom playlists with link <br/>
-Optimized sound experience <br/>
-SponsorBlock support <br/>
-Lyrics support <br/>
-No ads <br/>
-No subscriptions <br/>
-Inbuilt updater <br/>
-22 supported languages <br/>
-Material UI & accent colors & dynamic colors (Android 12+) <br/>
+### Các tính năng chính
+*   **Bản địa hóa toàn diện (Localization):** Giao diện và thông báo hệ thống được chuyển ngữ sang Tiếng Việt hoàn chỉnh, đảm bảo trải nghiệm người dùng mượt mà và trực quan.
+*   **Tối ưu hóa thuật toán gợi ý (Smart Recommendations):** Hệ thống đề xuất bài hát được điều chỉnh để giảm thiểu sự lặp lại và tăng cường độ phù hợp dựa trên lịch sử nghe nhạc và bối cảnh địa phương.
+*   **Phát nhạc liên tục (Infinite Playback):** Cơ chế tự động phát được cải tiến, đảm bảo chuyển tiếp liền mạch sang các bài hát gợi ý khi danh sách phát hiện tại kết thúc.
+*   **Tối ưu hóa tìm kiếm:** Tăng độ chính xác cho các truy vấn tìm kiếm, đặc biệt ưu tiên nội dung và nghệ sĩ Việt Nam.
+*   **Tiện ích mở rộng:** Tích hợp SponsorBlock để tự động bỏ qua các phân đoạn quảng cáo trong luồng âm thanh, hỗ trợ tải xuống ngoại tuyến và hiển thị lời bài hát đồng bộ.
 
-</center>
+### Hỗ trợ dự án
+Nếu bạn đánh giá cao những cải tiến trong phiên bản này, bạn có thể ủng hộ quá trình phát triển thông qua chuyển khoản ngân hàng (Mã QR có sẵn trong phần Cài đặt của ứng dụng):
 
+<div align="center">
+  <img src="assets/images/qr_bank.png" width="250" alt="QR Banking">
+</div>
 
----
-
-## Screenshots
-
-| ![Screenshot 1](https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg) | ![Screenshot 2](https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg) | ![Screenshot 3](https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/03.jpg) | ![Screenshot 4](https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/04.jpg) |
-|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
-
+</details>
 
 ---
+
+</div>
+
+## Overview
+
+**Musify-Vie** is a specialized fork of the [Musify](https://github.com/gokadzev/Musify) application, engineered to deliver a superior streaming experience with a strong focus on localization and algorithmic enhancements suited for the Vietnamese market.
+
+## Key Modifications
+
+*   **Vietnamese Localization:** Complete language support for the user interface and system messages, ensuring accessibility for native speakers.
+*   **Enhanced Recommendation Engine:** A refined algorithm that prioritizes relevant tracks based on comprehensive listening history and avoids repetitive shuffling.
+*   **Infinite Playback:** Improved autoplay functionality ensures a seamless transition to recommended tracks immediately upon queue completion.
+*   **Search Optimization:** Tuned search logic to prioritize localized content and improve overall query accuracy.
+*   **Extended Features:** Includes built-in SponsorBlock integration for uninterrupted listening, robust offline playback capabilities, and synchronized lyrics support.
 
 ## Download
 
+The latest installable package (APK) can be downloaded from the **Releases** section of this repository:
 
-[<img src="https://github.com/gokadzev/Musify/raw/master/repository_files/get-it-on-github.png" alt="Get it on Github" height="80">](https://github.com/gokadzev/Musify/releases/latest)
-[<img src="https://fdroid.gitlab.io/artwork/badge/get-it-on.png" alt="Get it on Fdroid" height="80">](https://f-droid.org/packages/com.gokadzev.musify.fdroid)
+[<img src="https://img.shields.io/badge/Download-APK-blue?style=for-the-badge&logo=android" height="40">](https://github.com/kwishtt/Musify-Vie/releases/latest)
+
+## Screenshots
+
+| <!-- Placeholder --> | <!-- Placeholder --> |
+|:---:|:---:|
+| <img src="https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/01.jpg" width="300"> | <img src="https://raw.githubusercontent.com/gokadzev/Musify/master/fastlane/metadata/android/en-US/images/phoneScreenshots/02.jpg" width="300"> |
 
 ---
+
+## Support
+
+Contributions to the maintenance and development of this fork are welcome. You can support via Bank Transfer (details available inside the App Settings):
+
+<div align="center">
+  <img src="assets/images/qr_bank.png" width="250" alt="QR Banking">
+</div>
+
+Alternatively, you may support the original developer (Gokadzev) at: [Ko-fi](https://ko-fi.com/gokadzev)
 
 ## License
 
+Musify-Vie is distributed under the **GPL v3.0** license. Please refer to the [LICENSE](LICENSE) file for further details.
 
-```
-Copyright © 2026 Valeri Gokadze
-
-Musify is a free software licensed under GPL v3.0
-It is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
-without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
-```
-
-```
-Being Open Source doesn't mean you can just make a copy of the app and upload it on playstore or sell
-a closed source copy of the same.
-Read the following carefully:
-1. Any copy of a software under GPL must be under same license. So you can't upload the app on a closed source
-  app repository like PlayStore/AppStore without distributing the source code.
-2. You can't sell any copied/modified version of the app under any "non-free" license.
-   You must provide the copy with the original software or with instructions on how to obtain original software,
-   should clearly state all changes, should clearly disclose full source code, should include same license
-   and all copyrights should be retained.
-
-In simple words, You can ONLY use the source code of this app for `Open Source` Project under `GPL v3.0` or later
-with all your source code CLEARLY DISCLOSED on any code hosting platform like GitHub, with clear INSTRUCTIONS on
-how to obtain the original software, should clearly STATE ALL CHANGES made and should RETAIN all copyrights.
-Use of this software under any "non-free" license is NOT permitted.
-```
-
-See the [GNU General Public License](https://github.com/gokadzev/Musify/blob/master/LICENSE) for more details.
-
----
-
-## Contribute
-
-Contributions are always welcome. Please read our [contributing guidelines](https://github.com/gokadzev/Musify/blob/master/CONTRIBUTING.md) before contributing.
-
----
-
-## F.A.Q
-
-You can see frequently asked questions and their answers [here](https://github.com/gokadzev/Musify/discussions/340).
-
----
-
-## Credits
-
-[Musify](https://github.com/Harsh-23/Musify) - Original inspiration for the concept and app name, while our implementation took a different direction with a complete rewrite, a rebranded logo, and a redesigned layout and UI.
-
----
-
-## Disclaimer
-
-```
-Musify does not possess or maintain any association with the songs and other content accessible through the app.
-All songs and other content are the property of their respective owners and are safeguarded by copyright law.
-Musify holds no liability for any copyright infringement or other violations of intellectual property rights
-that may arise from the use of the songs and other content accessible through the app.
-Musify employs third-party plugins and assumes no responsibility for any harm or damage to the respective owners or
-any other parties resulting from the utilization of the songs and other content through the third-party plugins.
-By using the app, you consent to utilizing the songs and other content exclusively for personal,
-non-commercial purposes and in accordance with all applicable laws and regulations.
-```
-
----
+**Credits:**
+Based on the original [Musify](https://github.com/gokadzev/Musify) by Valeri Gokadze.
+Modifications and maintenance by **ktmjn (kwishtt)**.
