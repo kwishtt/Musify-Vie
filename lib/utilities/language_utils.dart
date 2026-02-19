@@ -25,6 +25,7 @@ const appLanguages = <String>{
   'ta',
   'tr',
   'uk',
+  'vi',
 };
 
 final List<Locale> appSupportedLocales = appLanguages.map((languageCode) {
@@ -83,6 +84,8 @@ String getLanguageDisplayName(BuildContext context, String languageCode) {
       return l10n.languageTr;
     case 'uk':
       return l10n.languageUk;
+    case 'vi':
+      return l10n.languageVi;
     default:
       return l10n
           .languageEn; // Fallback to English if the language code is not recognized

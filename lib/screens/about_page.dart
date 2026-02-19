@@ -130,6 +130,41 @@ class AboutPage extends StatelessWidget {
                 ),
               ),
             ),
+          Card(
+              color: Theme.of(context).colorScheme.surfaceContainerHigh,
+              child: ListTile(
+                contentPadding: const EdgeInsets.all(8),
+                leading: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: NetworkImage(
+                        'https://github.com/kwishtt.png',
+                      ),
+                    ),
+                  ),
+                ),
+                title: const Text(
+                  'ktmjn',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text('Modder & Contributor'),
+                trailing: Wrap(
+                  children: <Widget>[
+                    _SocialButton(
+                      icon: FluentIcons.code_24_filled,
+                      tooltip: 'Github',
+                      onPressed: () {
+                        launchURL(Uri.parse('https://github.com/kwishtt'));
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),

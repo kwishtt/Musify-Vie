@@ -112,6 +112,7 @@
   "languageTa": "Tamil",
   "languageTr": "Turkish",
   "languageUk": "Ukrainian",
+  "languageVi": "Vietnamese",
   "languageMsg": "Language updated successfully",
   "library": "Library",
   "licenses": "Licenses",
@@ -206,5 +207,6 @@
   "useProxyDescription": "Use the proxy only when streaming fails, unnecessary use may break playback.",
   "userPlaylists": "User playlists",
   "yes": "Yes",
-  "youtubePlaylistLinkOrId": "YouTube playlist link or ID"
+  "youtubePlaylistLinkOrId": "YouTube playlist link or ID",
+  "close": "Close"
 }

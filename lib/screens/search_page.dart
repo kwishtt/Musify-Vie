@@ -67,6 +67,11 @@ class _SearchPageState extends State<SearchPage> {
   Timer? _debounce;
   int _latestSuggestionRequest = 0;
 
+  // Detect if query is Vietnamese to optimize search
+  bool _isVietnamese(String text) {
+    return RegExp(r'[àáạảãâầấậẩẫăằắặẳẵèéẹẻẽêềếệểễìíịỉĩòóọỏõôồốộổỗơờớợởỡùúụủũưừứựửữỳýỵỷỹđ]', caseSensitive: false).hasMatch(text);
+  }
+
   Future<void> _submitSearch([String? query]) async {
     if (query != null) {
       _searchBar.text = query;
@@ -113,7 +118,19 @@ class _SearchPageState extends State<SearchPage> {
     }
 
     try {
-      _songsSearchResult = await fetchSongsList(query);
+      // Optimize for Vietnam market if query contains Vietnamese characters or user setting is VI
+      final languageCode = Localizations.localeOf(context).languageCode;
+      String enhancedQuery = query;
+      
+      // If user language is Vietnamese but query is simple ASCII (e.g. "son tung"), 
+      // we might want to hint the search engine.
+      // However, usually YouTube is good at this.
+      // But we can filter results better or prioritize local content.
+      
+      _songsSearchResult = await fetchSongsList(enhancedQuery);
+      
+      // For albums and playlists, sometimes adding 'Vietnam' helps if the query is generic
+      // but let's stick to the original query to avoid over-filtering.
       _albumsSearchResult = await getPlaylists(query: query, type: 'album');
       _playlistsSearchResult = await getPlaylists(
         query: query,

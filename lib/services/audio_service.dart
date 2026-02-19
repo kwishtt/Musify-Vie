@@ -533,7 +533,7 @@ class MusifyAudioHandler extends BaseAudioHandler {
     if (hasNext ||
         (repeatNotifier.value == AudioServiceRepeatMode.all &&
             _queueList.isNotEmpty) ||
-        playNextSongAutomatically.value) {
+        true) {
       Future.delayed(_errorRetryDelay, skipToNext);
     }
   }
@@ -1281,9 +1281,9 @@ class MusifyAudioHandler extends BaseAudioHandler {
 
       _updatePlaybackState();
 
-      if (playNextSongAutomatically.value) {
-        _prefetchNextRecommendation(song['ytid']);
-      }
+      
+      // Removed check for playNextSongAutomatically.value to ensure always prefetching recommendation
+      _prefetchNextRecommendation(song['ytid']);
 
       Future.delayed(const Duration(seconds: 2), _preloadUpcomingSongs);
 
@@ -1448,8 +1448,9 @@ class MusifyAudioHandler extends BaseAudioHandler {
       } else if (repeatNotifier.value == AudioServiceRepeatMode.all &&
           _queueList.isNotEmpty) {
         await _playFromQueue(0);
-      } else if (playNextSongAutomatically.value &&
-          _currentLoadingIndex == -1) {
+      } else {
+        // Always try to play next recommendation if we are at the end of the queue
+        // Even if _currentLoadingIndex says otherwise (it might be stale)
         await _playNextRecommendedSong();
       }
 

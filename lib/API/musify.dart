@@ -183,7 +183,8 @@ Future<List> fetchSongsList(String searchQuery) async {
 
 Future<List> getRecommendedSongs() async {
   try {
-    if (externalRecommendations.value && userRecentlyPlayed.isNotEmpty) {
+    // Always try to use recent history for better recommendations based on user taste
+    if (userRecentlyPlayed.isNotEmpty) {
       return await _getRecommendationsFromRecentlyPlayed();
     } else {
       return await _getRecommendationsFromMixedSources();
@@ -195,7 +196,8 @@ Future<List> getRecommendedSongs() async {
 }
 
 Future<List> _getRecommendationsFromRecentlyPlayed() async {
-  final recent = (List.from(userRecentlyPlayed)..shuffle()).take(3).toList();
+  // Take 5 random songs from history (increased from 3 to diversify suggestions)
+  final recent = (List.from(userRecentlyPlayed)..shuffle()).take(5).toList();
 
   final futures = recent.map((songData) async {
     try {
@@ -928,12 +930,39 @@ Future<void> getSimilarSong(String songYtId) async {
     final relatedSongs = await _yt.videos.getRelatedVideos(song) ?? [];
 
     if (relatedSongs.isNotEmpty) {
-      nextRecommendedSong = returnSongLayout(0, relatedSongs[0]);
+      // Filter out songs that are already in recently played to avoid repetition
+      final candidates = relatedSongs.where((s) {
+        return !userRecentlyPlayed.any((recent) => recent['ytid'] == s.id.toString());
+      }).toList();
+       
+      // If all related songs are in history, fall back to all related songs
+      final pool = candidates.isNotEmpty ? candidates : relatedSongs;
+      
+      // Take top 5 and pick random to diversify (same vibe/genre usually in top related)
+      final takeCount = pool.length > 5 ? 5 : pool.length;
+      final random = DateTime.now().millisecondsSinceEpoch;
+      final index = random % takeCount;
+      
+      nextRecommendedSong = returnSongLayout(0, pool.elementAt(index));
     } else {
-      logger.log('No related songs found for $songYtId', null, null);
+      logger.log('No related songs found for $songYtId, falling back to general recommendations', null, null);
+      await _setFallbackRecommendation();
     }
   } catch (e, stackTrace) {
-    logger.log('Error while fetching next similar song:', e, stackTrace);
+    logger.log('Error fetching similar song, using fallback:', e, stackTrace);
+    await _setFallbackRecommendation();
+  }
+}
+
+Future<void> _setFallbackRecommendation() async {
+  try {
+    final recommendations = await getRecommendedSongs();
+    if (recommendations.isNotEmpty) {
+      recommendations.shuffle();
+      nextRecommendedSong = recommendations.first;
+    }
+  } catch (e) {
+    logger.log('Critical: Failed to set fallback recommendation', e, null);
   }
 }
 

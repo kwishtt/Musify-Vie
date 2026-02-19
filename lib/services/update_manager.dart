@@ -57,7 +57,8 @@ Future<void> checkAppUpdates() async {
     }
 
     final map = json.decode(response.body) as Map<String, dynamic>;
-    announcementURL.value = map['announcementurl'];
+    // announcementURL.value = map['announcementurl'];
+    announcementURL.value = null; // Force disable announcements for modded version
     final latestVersion = map['version'].toString();
 
     if (!isLatestVersionHigher(appVersion, latestVersion)) {
@@ -301,7 +302,8 @@ Future<void> fetchAnnouncementOnly() async {
     final map = json.decode(response.body) as Map<String, dynamic>;
     final ann = map['announcementurl'];
     if (ann != null) {
-      announcementURL.value = ann.toString();
+      // announcementURL.value = ann.toString();
+      announcementURL.value = null;
     }
   } catch (e, stackTrace) {
     logger.log('Error in fetchAnnouncementOnly', e, stackTrace);

@@ -635,9 +635,7 @@ class _OnlineArtwork extends StatelessWidget {
                     colorBlendMode: shouldOverlayBeShown
                         ? BlendMode.multiply
                         : null,
-                    opacity: shouldOverlayBeShown
-                        ? const AlwaysStoppedAnimation(0.45)
-                        : null,
+                    opacity: null,
                     image: imageProvider,
                     fit: isImageSmall ? BoxFit.fill : BoxFit.cover,
                     width: size,
@@ -658,15 +656,15 @@ class _OnlineArtwork extends StatelessWidget {
             errorWidget: (context, url, error) =>
                 const NullArtworkWidget(iconSize: 30),
           ),
-          if (isDurationAvailable && !isOffline)
-            Text(
-              '(${formatDuration(duration)})',
-              style: TextStyle(
-                color: colorScheme.primary,
-                fontWeight: FontWeight.bold,
-                fontSize: 12,
-              ),
-            ),
+          // if (isDurationAvailable && !isOffline)
+          //   Text(
+          //     '(${formatDuration(duration)})',
+          //     style: TextStyle(
+          //       color: colorScheme.primary,
+          //       fontWeight: FontWeight.bold,
+          //       fontSize: 12,
+          //     ),
+          //   ),
         ],
       ),
     );

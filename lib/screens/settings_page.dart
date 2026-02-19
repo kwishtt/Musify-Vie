@@ -374,8 +374,7 @@ class SettingsPage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(15),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(15),
-                  onTap: () =>
-                      launchURL(Uri.parse('https://ko-fi.com/gokadzev')),
+                  onTap: () => _showSponsorDialog(context),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       vertical: 12,
@@ -402,7 +401,7 @@ class SettingsPage extends StatelessWidget {
                           const SizedBox(width: 16),
                           Expanded(
                             child: Text(
-                              context.l10n!.sponsorProject,
+                              context.l10n!.becomeSponsor,
                               style: TextStyle(
                                 color: colorScheme.onPrimaryContainer,
                                 fontSize: 16,
@@ -434,6 +433,88 @@ class SettingsPage extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+
+  void _showSponsorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final colorScheme = Theme.of(context).colorScheme;
+        return AlertDialog(
+          scrollable: true,
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text(
+                'Support Musify Mod',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              // QR Code
+              Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(color: colorScheme.outlineVariant),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.asset(
+                    'assets/images/qr_bank.png',
+                    width: 250,
+                    height: 250,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return const SizedBox(
+                        width: 250,
+                        height: 250,
+                        child: Center(
+                          child: Text(
+                            'QR Code not found\n(assets/images/qr_bank.png)',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SizedBox(height: 24),
+              const Text(
+                'Scan to donate via Bank Transfer\nThank you for your support! ❤️',
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              const Divider(),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: () {
+                  launchURL(Uri.parse('https://ko-fi.com/gokadzev'));
+                },
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    'Or support the original developer (Gokadzev)',
+                    style: TextStyle(
+                      color: colorScheme.primary,
+                      decoration: TextDecoration.underline,
+                      fontSize: 12,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text(context.l10n!.close),
+            ),
+          ],
+        );
+      },
     );
   }
 
