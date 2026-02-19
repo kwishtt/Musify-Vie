@@ -66,12 +66,7 @@ The latest installable package (APK) can be downloaded from the **Releases** sec
 
 ## Support
 
-Contributions to the maintenance and development of this fork are welcome. You can support via Bank Transfer (details available inside the App Settings):
-
-<div align="center">
-  <img src="assets/images/qr_bank.png" width="250" alt="QR Banking">
-</div>
-
+You can support me at [Ko-fi](https://ko-fi.com/kwishtt)
 Alternatively, you may support the original developer (Gokadzev) at: [Ko-fi](https://ko-fi.com/gokadzev)
 
 ## License
